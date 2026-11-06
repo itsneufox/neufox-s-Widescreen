@@ -42,6 +42,7 @@ namespace config
     extern float hudMaxAspect;                    // live; 0 = the whole screen
     extern bool scriptDrawing;      // SCM/CLEO text and sprites (off: CLEO mods position for 640x448)
     extern HudPartSettings hudParts[static_cast<int>(HudPart::Count)];  // live
+    extern bool squareWeaponIcon;   // live; the original icon is drawn taller than its texture
     extern bool roundRadar;         // live; the original radar is 15% wider than tall even at 4:3
 
     inline const HudPartSettings& Part(HudPart p) { return hudParts[static_cast<int>(p)]; }

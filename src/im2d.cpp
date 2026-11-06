@@ -156,6 +156,14 @@ namespace im2d
                 out[i].x = atEdge ? x : el.X(x);
                 out[i].y = el.Y(out[i].y);
             }
+            if ((xf.flags & scope::kWidenElements) && xf.widen != 1.0f)
+            {
+                float right = out[0].x;
+                for (int i = 1; i < count; ++i)
+                    right = std::max(right, out[i].x);
+                for (int i = 0; i < count; ++i)
+                    out[i].x = right + (out[i].x - right) * xf.widen;
+            }
         }
 
         if (xf.flags & scope::kFillSides)

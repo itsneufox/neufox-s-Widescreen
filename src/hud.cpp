@@ -115,6 +115,21 @@ namespace
         return xf;
     }
 
+    // CHud::DrawWeaponIcon draws the square icon textures 47x58 units of the
+    // 640x448 canvas: taller than wide even at 4:3. Widened about its right
+    // edge (towards the empty side) so the texture shows 1:1.
+    Xform WeaponIcon()
+    {
+        Xform xf = Anchored<H::Right, V::Top, HudPart::PlayerInfo>();
+        if (config::squareWeaponIcon)
+        {
+            constexpr float kSquare = (58.0f / 448.0f * 3.0f) / (47.0f / 640.0f * 4.0f);  // height / width at 4:3
+            xf.flags |= scope::kWidenElements;
+            xf.widen = kSquare;
+        }
+        return xf;
+    }
+
     // Script text and sprites (minigames, mission screens) are full 640x448
     // layouts: keep them as one 4:3 picture in the middle.
     Xform Pillarbox()
@@ -154,6 +169,7 @@ namespace
     scope::Hook g_hud[] = {
         { "CHud::DrawCrosshairs", 0x58E020, 10, { 0x83, 0xEC, 0x30, 0x0F, 0xB6, 0x05, 0x74, 0xCD, 0xB7, 0x00 }, &Crosshair, &CrosshairLeave },
         { "CHud::DrawPlayerInfo", 0x58EAF0, 6, { 0x81, 0xEC, 0xA0, 0x01, 0x00, 0x00 }, &Anchored<H::Right, V::Top, HudPart::PlayerInfo> },
+        { "CHud::DrawWeaponIcon", 0x58D7D0, 5, { 0xA1, 0x24, 0x7B, 0xC9, 0x00 }, &WeaponIcon },
         { "CHud::DrawWanted", 0x58D9A0, 5, { 0x83, 0xEC, 0x4C, 0x53, 0x55 }, &Anchored<H::Right, V::Top, HudPart::Wanted> },
         { "CHud::DrawMissionTimers", 0x58B180, 5, { 0xA0, 0xC0, 0xAE, 0xBA, 0x00 }, &Anchored<H::Right, V::Top, HudPart::Timers> },
         { "CHud::DrawVehicleName", 0x58AEA0, 7, { 0x51, 0x8B, 0x15, 0x58, 0xA4, 0xBA, 0x00 }, &Anchored<H::Right, V::Bottom, HudPart::ZoneNames> },

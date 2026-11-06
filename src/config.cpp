@@ -26,6 +26,7 @@ namespace config
     bool scriptDrawing = false;
     HudPartSettings hudParts[static_cast<int>(HudPart::Count)];
     bool roundRadar = true;
+    bool squareWeaponIcon = true;
 
     bool frontend = true;
     MenuLayout menuLayout = MenuLayout::Edges;
@@ -129,6 +130,7 @@ namespace config
             p.offsetY = ReadFloat(kPartSections[i], "OffsetY", 0.0f, -4000.0f, 4000.0f);
         }
         roundRadar = ReadBool("HUD.Radar", "Round", true);
+        squareWeaponIcon = ReadBool("HUD", "SquareWeaponIcon", true);
 
         static const char* const layouts[] = { "edges", "centered", "stretch" };
         menuLayout = ReadEnum("Menus", "Layout", MenuLayout::Edges, layouts);
