@@ -131,6 +131,9 @@ namespace
             { 0x5782D0, 0xD8, 0x1D, 0x858B34, &g_mapLeft },  { 0x578374, 0xD8, 0x1D, 0x858B34, &g_mapLeft },
             { 0x5783F8, 0xD8, 0x1D, 0x858B34, &g_mapLeft },  { 0x577E1D, 0xD8, 0x1D, 0x865260, &g_mapRight },
             { 0x577EC1, 0xD8, 0x1D, 0x865260, &g_mapRight }, { 0x577F45, 0xD8, 0x1D, 0x865260, &g_mapRight },
+            // CRadar::DrawBlips: the gold ruler lines show while the mouse is inside
+            // StretchX(60) .. width - StretchX(60) (the right edge mirrors the left)
+            { 0x588095, 0xD8, 0x0D, 0x858B34, &g_mapLeft },
             // How far the map cursor follows the mouse / zoom keeps it (x only; y stays)
             { 0x577714, 0xD8, 0x1D, 0x8653E0, &g_cursorRight }, { 0x577780, 0xD8, 0x1D, 0x8653E0, &g_cursorRight },
             { 0x578074, 0xD8, 0x1D, 0x8653E0, &g_cursorRight }, { 0x578289, 0xD8, 0x1D, 0x8653E0, &g_cursorRight },
@@ -144,8 +147,12 @@ namespace
         }
 
         // Mouse inside the map: call CMenuManager::StretchX (0x5733E0) with 60 / 580.
+        // The cursor turns into the map's crosshair while dragging inside
+        // StretchX(60) .. width - StretchX(60): both calls get the left edge.
         for (auto [at, fn] : { std::pair<uintptr_t, const void*>{ 0x577CB7, reinterpret_cast<const void*>(&MapMouseLeft) },
-                               std::pair<uintptr_t, const void*>{ 0x577CD0, reinterpret_cast<const void*>(&MapMouseRight) } })
+                               std::pair<uintptr_t, const void*>{ 0x577CD0, reinterpret_cast<const void*>(&MapMouseRight) },
+                               std::pair<uintptr_t, const void*>{ 0x57BFB0, reinterpret_cast<const void*>(&MapMouseLeft) },
+                               std::pair<uintptr_t, const void*>{ 0x57BFCF, reinterpret_cast<const void*>(&MapMouseLeft) } })
         {
             const int32_t rel = static_cast<int32_t>(0x5733E0 - (at + 5));
             uint8_t call[5] = { 0xE8 };
