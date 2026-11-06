@@ -1,0 +1,22 @@
+# Build output
+build/
+*.o
+*.asi
+*.zip
+
+# Logs written by the mod when testing
+*.log
+
+# Editors and tools
+.vscode/
+.idea/
+.cache/
+compile_commands.json
+compile_flags.txt
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
