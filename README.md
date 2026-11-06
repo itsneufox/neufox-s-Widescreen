@@ -1,5 +1,7 @@
 # neufox's Widescreen
 
+English | [Português (Brasil)](README.pt-BR.md)
+
 [![SA-MP](https://img.shields.io/badge/SA--MP-✔-green.svg)](https://www.sa-mp.mp/)
 [![open.mp](https://img.shields.io/badge/open.mp-✔-green.svg)](https://www.open.mp/)
 [![GTA SA](https://img.shields.io/badge/GTA_SA-1.0_US_%7C_EU-blue.svg)](#install)
@@ -57,6 +59,7 @@ leaves everything a server draws exactly as it was. Nothing else about your game
 
 - **Original proportions**: every part keeps its shape and its distance from its edge.
 - **Round radar**: the original is a slightly wide oval, even at 4:3. This one is a circle.
+- **Square weapon icon**: the original draws it taller than wide; here it keeps the shape of its picture.
 - **Sizes**: the whole HUD, the radar and the crosshair, each with its own slider.
 - **HUD area**: keep the HUD inside 4:3, 16:10, 16:9 or 21:9 on ultrawide screens.
 - **Every part adjustable**: size and position of the radar, money, wanted level, timers, subtitles and more.
