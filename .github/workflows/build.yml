@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (Windows x86, MinGW)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-mingw-w64-i686 zip
+
+      - name: Build
+        run: make dist VERSION="dev.$(git rev-list --count HEAD)+$(git rev-parse --short HEAD)"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neufoxWidescreen-${{ github.sha }}
+          path: |
+            build/neufoxWidescreen.asi
+            build/neufoxWidescreen.ini
+          if-no-files-found: error

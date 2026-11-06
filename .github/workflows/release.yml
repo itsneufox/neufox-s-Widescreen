@@ -1,0 +1,76 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version, MAJOR.MINOR.PATCH (e.g. 1.0.0). The build number is added automatically.'
+        required: true
+        type: string
+        default: '1.0.0'
+      release_type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+          - beta
+          - release-candidate
+          - stable
+
+jobs:
+  release:
+    name: Build and release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Version
+        id: vars
+        shell: bash
+        run: |
+          # MAJOR.MINOR.PATCH.BUILD: the build number is the
+          # total commit count. Pre-releases carry their channel in the tag.
+          base="${{ github.event.inputs.version }}"
+          if ! [[ "$base" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version must be MAJOR.MINOR.PATCH, e.g. 1.0.0"
+            exit 1
+          fi
+          build=$(git rev-list --count HEAD)
+          number="${base}.${build}"
+
+          case "${{ github.event.inputs.release_type }}" in
+            stable)            suffix="";      label="";         prerelease=false ;;
+            release-candidate) suffix="-rc";   label=" (RC)";    prerelease=true  ;;
+            *)                 suffix="-beta"; label=" (beta)";  prerelease=true  ;;
+          esac
+
+          echo "version=v${number}${suffix}" >> "$GITHUB_OUTPUT"
+          echo "name=neufox's Widescreen ${number}${label}" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+          echo "Release: neufox's Widescreen ${number}${label} (tag v${number}${suffix})"
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-mingw-w64-i686 zip
+
+      - name: Build
+        run: |
+          make dist VERSION="${{ steps.vars.outputs.version }}"
+          mv build/neufoxWidescreen.zip "build/neufoxWidescreen-${{ steps.vars.outputs.version }}.zip"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.version }}
+          name: ${{ steps.vars.outputs.name }}
+          prerelease: ${{ steps.vars.outputs.prerelease }}
+          generate_release_notes: true
+          files: build/neufoxWidescreen-${{ steps.vars.outputs.version }}.zip
