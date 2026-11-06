@@ -15,6 +15,7 @@ namespace scope
         kFillSides = 1 << 1,      // black out the sides left uncovered by a full-height overlay
         kEdgeAnchors = 1 << 2,    // decoration in the top/bottom bands sticks to the nearest side edge
         kAutoAnchors = 1 << 3,    // every element sticks to the side edge of the third it is in
+        kWidenElements = 1 << 5,  // each element is widened by widen about its own right edge
         kPinScreenEdges = 1 << 4, // untextured fills keep the corners that touch the screen's side edges there
     };
 
@@ -25,6 +26,7 @@ namespace scope
         float ax = 0.0f, kx = 1.0f, tx = 0.0f;
         float ay = 0.0f, ky = 1.0f, ty = 0.0f;
         float edgeLeft = 0.0f, edgeRight = 0.0f;  // kEdgeAnchors / kAutoAnchors targets
+        float widen = 1.0f;                        // kWidenElements factor
         uint32_t flags = 0;
         Fit fit = Fit::Stretch;
 
