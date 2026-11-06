@@ -103,23 +103,22 @@ modloader já vêm com um. Copiou só o `.asi`? O `.ini` é criado na primeira v
 
 ## Configurações
 
-**No jogo**: *Options > Display Setup > Advanced > Widescreen Settings*.
+**No jogo**: *Options > Display Setup > Advanced > Widescreen Settings*, uma lista de categorias
+como a página Options do jogo:
 
-| Opção no menu | |
+| Categoria | Opções |
 | --- | --- |
-| Widescreen | Liga ou desliga o fix inteiro |
-| Field of view | Controle deslizante, 0.5x a 2x |
-| HUD / radar / crosshair size | Controles deslizantes |
-| Round radar | Liga / desliga |
-| HUD area | Full, 4:3, 16:10, 16:9, 21:9 |
-| Menu layout | Edges, centered, stretched |
-| Cutscene bars | Original, off, pillarbox, com ou sem o deslize |
-| Restore defaults | Volta tudo ao padrão |
+| General | Widescreen liga/desliga, proporção, prévia ao vivo, pular a abertura |
+| Camera | Imagem mais larga (Hor+), campo de visão, coronas redondas, correção da água |
+| HUD | Tamanho, largura e altura do HUD, área do HUD, tamanho do radar, radar redondo, tamanho da mira, ícone da arma quadrado |
+| HUD Parts | Tamanho e posição de cada parte do HUD |
+| Menus | Layout e área dos menus, mapa largo, fundos, telas de carregamento, vídeos de abertura |
+| Cutscenes | Barras das cutscenes, tamanho, deslize |
 
-O jogo continua rodando atrás da página, então você vê cada mudança na hora.
+Cada página tem o próprio Restore Defaults. Nas páginas Camera, HUD e HUD Parts o jogo continua
+rodando atrás do menu, então você vê cada mudança na hora.
 
-**No `neufoxWidescreen.ini`**: tudo acima, mais a posição de cada parte do HUD, o ajuste das telas
-de carregamento e dos vídeos, pular a abertura e mais. Cada opção tem um comentário. Salve o
+**No `neufoxWidescreen.ini`**: tudo acima, e mais. Cada opção tem um comentário. Salve o
 arquivo e a mudança vale com o jogo aberto.
 
 ## Problemas

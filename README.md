@@ -102,23 +102,22 @@ modloader already include one. Copied only the `.asi`? The `.ini` is created on 
 
 ## Settings
 
-**In game**: *Options > Display Setup > Advanced > Widescreen Settings*.
+**In game**: *Options > Display Setup > Advanced > Widescreen Settings*, a list of categories
+like the game's Options page:
 
-| Setting | |
+| Category | Settings |
 | --- | --- |
-| Widescreen | Turn the whole fix on or off |
-| Field of view | Slider, 0.5x to 2x |
-| HUD / radar / crosshair size | Sliders |
-| Round radar | On / off |
-| HUD area | Full, 4:3, 16:10, 16:9, 21:9 |
-| Menu layout | Edges, centered, stretched |
-| Cutscene bars | Original, off, pillarbox, with or without the slide |
-| Restore defaults | |
+| General | Widescreen on/off, aspect ratio, live preview, skip intro |
+| Camera | Wider view (Hor+), field of view, round coronas, water fix |
+| HUD | HUD size, width and height, HUD area, radar size, round radar, crosshair size, square weapon icon |
+| HUD Parts | Size and position of each part of the HUD |
+| Menus | Menu layout and area, wide map, backgrounds, loading screens, intro videos |
+| Cutscenes | Cutscene bars, bar size, bar slide |
 
-The game keeps running behind the page, so you see each change as you make it.
+Every page has its own Restore Defaults. On the Camera, HUD and HUD Parts pages the game keeps
+running behind the menu, so you see each change as you make it.
 
-**In `neufoxWidescreen.ini`**: everything above plus the position of each HUD part, loading
-screen and video fitting, skip intro and more. Every setting has a comment. Save the file and
+**In `neufoxWidescreen.ini`**: everything above, and more. Every setting has a comment. Save the file and
 the change applies while the game runs.
 
 ## Troubleshooting
