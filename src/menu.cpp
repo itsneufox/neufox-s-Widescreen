@@ -181,6 +181,11 @@ namespace
         { "ORIGINAL", "vanilla", float(config::Borders::Vanilla) }, { "OFF", "off", float(config::Borders::Off) },
         { "PILLARBOX", "pillarbox", float(config::Borders::Pillarbox) },
     };
+    constexpr Choice kTextdraws[] = {
+        { "OFF", "off", float(config::Textdraws::Off) }, { "SCALE", "scale", float(config::Textdraws::Scale) },
+        { "16 X 9 BOX", "box", float(config::Textdraws::Box) },
+    };
+    bool WiderThan169() { return Width() / Height() > 16.0f / 9.0f + 0.01f || config::forcedAspect > 16.0f / 9.0f + 0.01f; }
     bool BarsOn() { return config::borders != config::Borders::Off; }
 
     template <size_t N>
@@ -219,6 +224,12 @@ namespace
     const Setting sAspect { "ASPECT RATIO", "SCREEN SHAPE", Kind::Choice,
         [] { return config::forcedAspect; }, [](float v) { config::forcedAspect = v; },
         [] { Save("General", "AspectRatio", IniOf(kAspects, config::forcedAspect)); }, 0.0f, {}, { kAspects, 6 } };
+    const Setting sOutline { "TEXT OUTLINE", "SMOOTH OUTLINE ON MENU AND HUD TEXT", Kind::Toggle,
+        [] { return float(config::textOutline); }, [](float v) { config::textOutline = v > 0.5f; },
+        [] { SaveBool("General", "TextOutline", config::textOutline); }, 1.0f, {}, {} };
+    const Setting sTextdraws { "TEXTDRAWS", "SA-MP TEXTDRAWS: STOP THEM STRETCHING, OR KEEP THEM IN A 16 X 9 BOX", Kind::Choice,
+        [] { return float(config::textdraws); }, [](float v) { config::textdraws = config::Textdraws(int(v)); },
+        [] { Save("General", "Textdraws", IniOf(kTextdraws, float(config::textdraws))); }, float(config::Textdraws::Scale), {}, { kTextdraws, 3 }, Opt{ .usable = WiderThan169, .why = "ONLY FOR SCREENS WIDER THAN 16 X 9" } };
     const Setting sFov { "FIELD OF VIEW", "HOW WIDE THE CAMERA SEES", Kind::Slider,
         [] { return config::fovScale; }, [](float v) { config::fovScale = v; },
         [] { SaveFloat("Camera", "FOV", config::fovScale); }, 1.0f, { 0.5f, 2.0f }, {} };
@@ -325,8 +336,8 @@ namespace
     };
 
     const PageDef kPages[] = {
-        { "GENERAL", "General", "WIDESCREEN ON OR OFF / ASPECT RATIO / LIVE PREVIEW / SKIP INTRO",
-          { &sWidescreen, &sAspect, &sLivePreview, &sSkipIntro } },
+        { "GENERAL", "General", "WIDESCREEN ON OR OFF / ASPECT RATIO / TEXT OUTLINE / TEXTDRAWS / LIVE PREVIEW / SKIP INTRO",
+          { &sWidescreen, &sAspect, &sOutline, &sTextdraws, &sLivePreview, &sSkipIntro } },
         { "CAMERA", "Camera", "WIDER VIEW / FIELD OF VIEW / CORONAS / WATER",
           { &sHorPlus, &sFov, &sCoronas, &sWaterFix }, true },
         { "HUD", "HUD", "SIZES / ROUND RADAR / WEAPON ICON / HUD AREA",

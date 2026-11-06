@@ -71,10 +71,12 @@ leaves everything a server draws exactly as it was. Nothing else about your game
 - **Loading screens and backgrounds**: keep their own shape, so widescreen artwork mods look right.
 - **Intro videos**: play without stretching, or skip them.
 - **Cutscene bars**: original, off, or pillarboxed to the exact original framing, with an optional slide.
+- **Text outline**: menu and HUD text gets a smooth, round outline instead of the shadow and blocky edge. Optional.
 
 **SA-MP and open.mp**
 
-- **Textdraws untouched**: only the game's own HUD and menus are corrected.
+- **Textdraws untouched up to 16:9**: there, only the game's own HUD and menus are corrected.
+- **Textdraw scaling on wider screens**: textdraws keep their 16:9 shape, panel by panel, or stay in a 16:9 box. Clicks follow them, and it can be turned off.
 - **`/hudscalefix`**: detected and handled, so it can stay on or off.
 - **open.mp's menu page**: works alongside it.
 - **Other widescreen fixes**: if one is installed, the mod tells you which file to remove instead of fixing everything twice.
@@ -107,7 +109,7 @@ like the game's Options page:
 
 | Category | Settings |
 | --- | --- |
-| General | Widescreen on/off, aspect ratio, live preview, skip intro |
+| General | Widescreen on/off, aspect ratio, text outline, textdraws, live preview, skip intro |
 | Camera | Wider view (Hor+), field of view, round coronas, water fix |
 | HUD | HUD size, width and height, HUD area, radar size, round radar, crosshair size, square weapon icon |
 | HUD Parts | Size and position of each part of the HUD |
@@ -172,7 +174,7 @@ that patch is skipped and logged.
 ## Credits
 
 - **Edgyaf** and **EvilShadeZ**: testing and ideas.
-- **iAmir**: help with 1.0 EU support.
+- **iAmir** and **beczy**: help with 1.0 EU support.
 
 ## License
 

@@ -72,10 +72,12 @@ seu jogo muda.
 - **Telas de carregamento e fundos**: mantêm o próprio formato, então mods com artes widescreen ficam certos.
 - **Vídeos de abertura**: tocam sem esticar, ou podem ser pulados.
 - **Barras das cutscenes**: originais, desligadas, ou com barras laterais no enquadramento original exato, com deslize opcional.
+- **Contorno do texto**: o texto dos menus e do HUD ganha um contorno suave e redondo no lugar da sombra e da borda serrilhada. Opcional.
 
 **SA-MP e open.mp**
 
-- **Textdraws intactos**: só o HUD e os menus do próprio jogo são corrigidos.
+- **Textdraws intactos até 16:9**: nessas telas, só o HUD e os menus do próprio jogo são corrigidos.
+- **Escala de textdraws em telas mais largas**: os textdraws mantêm o formato de 16:9, painel por painel, ou ficam numa área 16:9. Os cliques acompanham, e dá para desligar.
 - **`/hudscalefix`**: detectado e tratado, pode ficar ligado ou desligado.
 - **Página de menu do open.mp**: funciona junto.
 - **Outros widescreen fixes**: se houver um instalado, o mod diz qual arquivo remover em vez de corrigir tudo duas vezes.
@@ -108,7 +110,7 @@ como a página Options do jogo:
 
 | Categoria | Opções |
 | --- | --- |
-| General | Widescreen liga/desliga, proporção, prévia ao vivo, pular a abertura |
+| General | Widescreen liga/desliga, proporção, contorno do texto, textdraws, prévia ao vivo, pular a abertura |
 | Camera | Imagem mais larga (Hor+), campo de visão, coronas redondas, correção da água |
 | HUD | Tamanho, largura e altura do HUD, área do HUD, tamanho do radar, radar redondo, tamanho da mira, ícone da arma quadrado |
 | HUD Parts | Tamanho e posição de cada parte do HUD |
@@ -174,7 +176,7 @@ bytes, aquele patch é pulado e registrado no log.
 ## Créditos
 
 - **Edgyaf** e **EvilShadeZ**: testes e ideias.
-- **iAmir**: ajuda com o suporte ao 1.0 EU.
+- **iAmir** e **beczy**: ajuda com o suporte ao 1.0 EU.
 
 ## Licença
 

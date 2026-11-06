@@ -13,11 +13,14 @@ namespace config
 {
     bool widescreen = true;
     float forcedAspect = 0.0f;
+    Textdraws textdraws = Textdraws::Scale;
+    bool textOutline = true;
     bool horPlus = true;
     float fovScale = 1.0f;
     bool proportionalSprites = true;
     bool waterFix = true;
     bool wideMap = true;
+    bool settingsMenu = true;
     bool liveMenuPreview = true;
 
     bool hud = true;
@@ -115,6 +118,9 @@ namespace config
         widescreen = ReadBool("General", "Widescreen", true);
         horPlus = ReadBool("Camera", "HorPlus", true);
         forcedAspect = ReadAspect("General", "AspectRatio");
+        textOutline = ReadBool("General", "TextOutline", true);
+        static const char* const textdrawModes[] = { "off", "scale", "box" };
+        textdraws = ReadEnum("General", "Textdraws", Textdraws::Scale, textdrawModes);
         fovScale = ReadFloat("Camera", "FOV", 1.0f, 0.5f, 2.0f);
 
         hudScale = ReadFloat("HUD", "Scale", 1.0f, 0.25f, 4.0f);
@@ -164,6 +170,7 @@ namespace config
         scriptDrawing = ReadBool("HUD", "ScriptDrawing", false);
         frontend = ReadBool("Menus", "Enable", true);
         wideMap = ReadBool("Menus", "WideMap", true);
+        settingsMenu = ReadBool("Menus", "SettingsMenu", true);
         liveMenuPreview = ReadBool("Menus", "LivePreview", true);
         skipIntro = ReadBool("Startup", "SkipIntro", false);
         g_liveReload = ReadBool("Debug", "LiveReload", true);

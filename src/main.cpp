@@ -135,6 +135,7 @@ namespace
         if (config::skipIntro)
             InstallSkipIntro();
         InstallFontHooks();
+        InstallTextdrawFix();
         if (config::hud)
             InstallHudScopes();
         if (config::frontend)

@@ -182,9 +182,35 @@ namespace
         scope::Pop();
     }
 
+    // CMenuManager::DrawStandardMenus places the marker beside the selected row
+    // with StretchX for its height too (y - StretchX(5) .. y + StretchX(47)), so
+    // it grows taller with wider screens while the scope only narrows it. Those
+    // offsets get the same narrowing, which gives them their 4:3 length.
+    void __thiscall MenuMarkerDraw(void* sprite, const void* rect, const void* rgba)
+    {
+        scope::Frame* f = scope::Top();
+        if (!f || f->xf.Identity())
+            return g_spriteDraw(sprite, rect, rgba);
+        game::Rect r = *static_cast<const game::Rect*>(rect);
+        const float row = r.top + 5.0f * screen::Width() / kCanvasWidth;
+        r.top = row + (r.top - row) * f->xf.kx;
+        r.bottom = row + (r.bottom - row) * f->xf.kx;
+        g_spriteDraw(sprite, &r, rgba);
+    }
+
     void InstallCursorFix()
     {
         g_spriteDraw = reinterpret_cast<SpriteDrawFn>(mem::Address(0x728350));  // CSprite2d::Draw(const CRect&, const CRGBA&)
+        {
+            constexpr uintptr_t at = 0x57A5EC;
+            const int32_t rel = static_cast<int32_t>(0x728350 - (at + 5));
+            uint8_t call[5] = { 0xE8 };
+            std::memcpy(call + 1, &rel, 4);
+            if (mem::Matches(at, call, sizeof(call)))
+                mem::WriteCall(at, reinterpret_cast<const void*>(&MenuMarkerDraw), sizeof(call));
+            else
+                Log("skip: menu marker draw at %08X is already patched", static_cast<unsigned>(at));
+        }
         for (uintptr_t at : { 0x57C0BCu, 0x57C128u, 0x57C1B2u, 0x57C21Eu })
         {
             const int32_t rel = static_cast<int32_t>(0x728350 - (at + 5));
@@ -210,7 +236,8 @@ void InstallFrontendFixes()
     InstallCursorFix();
     if (config::wideMap)
         InstallWideMap();
-    InstallMenuSettings();
+    if (config::settingsMenu)
+        InstallMenuSettings();
 
     static const uint8_t storeMouseX[] = { 0x89, 0x0D, 0x28, 0x68, 0xBA, 0x00 };  // mov [m_nMousePosWinX], ecx
     if (mem::Matches(0x748323, storeMouseX, sizeof(storeMouseX)))

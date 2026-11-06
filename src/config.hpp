@@ -13,6 +13,8 @@ namespace config
 
     enum class Borders : uint8_t { Vanilla, Off, Pillarbox };
 
+    enum class Textdraws : uint8_t { Off, Scale, Box };
+
     // Independently adjustable HUD parts.
     enum class HudPart : uint8_t
     {
@@ -31,6 +33,8 @@ namespace config
     // [General] / [Camera]
     extern bool widescreen;         // live; master switch: off is the original game
     extern float forcedAspect;      // live; 0 = the window's real aspect ratio
+    extern Textdraws textdraws;     // live; SA-MP textdraws on screens wider than 16:9
+    extern bool textOutline;        // live; round outline on menu and HUD text instead of the shadow / blocky edge
     extern bool horPlus;            // keep the 4:3 vertical FOV, widen horizontally
     extern float fovScale;          // live; gameplay FOV multiplier, cutscenes excluded
     extern bool proportionalSprites;
@@ -51,6 +55,7 @@ namespace config
     extern bool frontend;
     extern MenuLayout menuLayout;   // live
     extern bool wideMap;            // the map page fills the screen width
+    extern bool settingsMenu;       // add the Widescreen Settings page to the game's menu (off: ini only)
     extern bool liveMenuPreview;    // the game stays visible behind the Widescreen Settings page
     extern float menuMaxAspect;     // live
     extern Fit menuBackground;      // live

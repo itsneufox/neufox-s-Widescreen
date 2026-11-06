@@ -4,6 +4,7 @@
 #include "screen.hpp"
 #include "mem.hpp"
 
+#include <cmath>
 #include <cstring>
 
 // Each HUD element is scaled towards the screen edge or centre it belongs
@@ -190,6 +191,61 @@ namespace
     scope::Hook g_scriptText = { "CHud::DrawScriptText", 0x58C080, 6, { 0x81, 0xEC, 0x90, 0x01, 0x00, 0x00 }, &Pillarbox };
 }
 
+namespace
+{
+    // CRadar::DrawRotatingRadarSprite (the player's arrow and other turning
+    // markers) rotates first, then applies a separate width and height. The arrow
+    // gets both from the screen's width, so it grows taller with wider screens,
+    // and the scope only narrows it. Its corners are moved so that, once
+    // transformed, it is square on screen and the size it has at 4:3.
+    using RotatedSpriteFn = void(__thiscall*)(void* sprite, float x1, float y1, float x2, float y2,
+                                              float x3, float y3, float x4, float y4, const game::RGBA* color);
+    RotatedSpriteFn g_rotatedSprite;
+
+    void __thiscall RotatedSprite(void* sprite, float x1, float y1, float x2, float y2,
+                                  float x3, float y3, float x4, float y4, const game::RGBA* color)
+    {
+        scope::Frame* f = scope::Top();
+        if (f && !f->xf.Identity() && f->xf.kx > 0.0f)
+        {
+            const float cx = 0.25f * (x1 + x2 + x3 + x4), cy = 0.25f * (y1 + y2 + y3 + y4);
+            // The corners are 90 degrees apart, so these give the width and height
+            // the game applied, whatever the rotation.
+            const float w = std::sqrt(0.5f * ((x1 - cx) * (x1 - cx) + (x2 - cx) * (x2 - cx) + (x3 - cx) * (x3 - cx) + (x4 - cx) * (x4 - cx)));
+            const float h = std::sqrt(0.5f * ((y1 - cy) * (y1 - cy) + (y2 - cy) * (y2 - cy) + (y3 - cy) * (y3 - cy) + (y4 - cy) * (y4 - cy)));
+            if (h > 0.0f)
+            {
+                const float squash = screen::HudSquash();
+                const float kX = squash * f->xf.ky / f->xf.kx, kY = squash * w / h;
+                x1 = cx + (x1 - cx) * kX;
+                x2 = cx + (x2 - cx) * kX;
+                x3 = cx + (x3 - cx) * kX;
+                x4 = cx + (x4 - cx) * kX;
+                y1 = cy + (y1 - cy) * kY;
+                y2 = cy + (y2 - cy) * kY;
+                y3 = cy + (y3 - cy) * kY;
+                y4 = cy + (y4 - cy) * kY;
+            }
+        }
+        g_rotatedSprite(sprite, x1, y1, x2, y2, x3, y3, x4, y4, color);
+    }
+
+    void InstallRotatedSpriteFix()
+    {
+        constexpr uintptr_t at = 0x58494F, target = 0x728520;  // CSprite2d::Draw(4 corners, color)
+        const int32_t rel = static_cast<int32_t>(target - (at + 5));
+        uint8_t call[5] = { 0xE8 };
+        std::memcpy(call + 1, &rel, 4);
+        if (!mem::Matches(at, call, sizeof(call)))
+        {
+            Log("skip: rotated radar sprite draw at %08X is already patched", static_cast<unsigned>(at));
+            return;
+        }
+        g_rotatedSprite = reinterpret_cast<RotatedSpriteFn>(mem::Address(target));
+        mem::WriteCall(at, reinterpret_cast<const void*>(&RotatedSprite), sizeof(call));
+    }
+}
+
 // The circle crosshair as CHud::DrawCrossHairs draws it while aiming (one
 // quarter of the siteM16 sprite, mirrored four times around the aim point),
 // for the settings page's live preview when the player is not aiming.
@@ -229,6 +285,7 @@ void InstallHudScopes()
 {
     for (scope::Hook& h : g_hud)
         scope::Install(h);
+    InstallRotatedSpriteFix();
     if (config::scriptDrawing)
         scope::Install(g_scriptText);
 }

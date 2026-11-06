@@ -51,6 +51,19 @@ namespace game
     // CFont render state (CFont::Details).
     namespace font
     {
+        inline uint32_t& Color() { return *reinterpret_cast<uint32_t*>(0xC71A60); }  // RGBA, lowest byte first
+        inline uint8_t& DropRed() { return *reinterpret_cast<uint8_t*>(0xC71A97); }
+        inline uint8_t& DropGreen() { return *reinterpret_cast<uint8_t*>(0xC71A98); }
+        inline uint8_t& DropBlue() { return *reinterpret_cast<uint8_t*>(0xC71A99); }
+        inline uint8_t& DropAlpha() { return *reinterpret_cast<uint8_t*>(0xC71A9A); }
+        inline int8_t& Shadow() { return *reinterpret_cast<int8_t*>(0xC71A96); }
+        inline int8_t& Edge() { return *reinterpret_cast<int8_t*>(0xC71A9B); }      // SetEdge also sets the spacing at 0xC71A9C
+        inline uint8_t& IsCopy() { return *reinterpret_cast<uint8_t*>(0xC71A7E); }  // this glyph run is a shadow/edge copy
+        inline bool Centred() { return *reinterpret_cast<uint8_t*>(0xC71A79) != 0; }
+        inline bool RightJustified() { return *reinterpret_cast<uint8_t*>(0xC71A7A) != 0; }
+        // A box with no opacity draws nothing, but servers often leave one on.
+        inline bool HasBox() { return *reinterpret_cast<uint8_t*>(0xC71A7B) != 0 && *reinterpret_cast<uint8_t*>(0xC71A87) != 0; }
+        inline float Slant() { return *reinterpret_cast<float*>(0xC71A6C); }
         inline float& ScaleX() { return *reinterpret_cast<float*>(0xC71A64); }
         inline float& ScaleY() { return *reinterpret_cast<float*>(0xC71A68); }
         inline float& SlantRefX() { return *reinterpret_cast<float*>(0xC71A70); }

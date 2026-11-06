@@ -2,6 +2,7 @@
 
 void InstallCameraFixes();
 void InstallFontHooks();
+void InstallTextdrawFix();
 void InstallHudScopes();
 void InstallFrontendFixes();
 void InstallVideoFix();
