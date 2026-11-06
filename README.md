@@ -167,6 +167,11 @@ that patch is skipped and logged.
 
 </details>
 
+## Credits
+
+- **Edgyaf** and **EvilShadeZ**: testing and ideas.
+- **iAmir**: help with 1.0 EU support.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
