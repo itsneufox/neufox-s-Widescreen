@@ -165,6 +165,43 @@ namespace
     }
 }
 
+namespace
+{
+    // The menu mouse cursor (and its shadow) is drawn by CMenuManager::DrawBackground
+    // with CSprite2d::Draw. In the top quarter the menu layout would take it for
+    // title decoration and push it to the screen edge, away from the pointer:
+    // the cursor keeps the menu's transform without the edge anchoring.
+    using SpriteDrawFn = void(__thiscall*)(void* sprite, const void* rect, const void* rgba);
+    SpriteDrawFn g_spriteDraw;
+
+    void __thiscall CursorDraw(void* sprite, const void* rect, const void* rgba)
+    {
+        scope::Frame* f = scope::Top();
+        if (!f || !(f->xf.flags & scope::kEdgeAnchors))
+            return g_spriteDraw(sprite, rect, rgba);
+        scope::Xform xf = f->xf;
+        xf.flags &= ~scope::kEdgeAnchors;
+        scope::Push(xf);
+        g_spriteDraw(sprite, rect, rgba);
+        scope::Pop();
+    }
+
+    void InstallCursorFix()
+    {
+        g_spriteDraw = reinterpret_cast<SpriteDrawFn>(mem::Address(0x728350));  // CSprite2d::Draw(const CRect&, const CRGBA&)
+        for (uintptr_t at : { 0x57C0BCu, 0x57C128u, 0x57C1B2u, 0x57C21Eu })
+        {
+            const int32_t rel = static_cast<int32_t>(0x728350 - (at + 5));
+            uint8_t call[5] = { 0xE8 };
+            std::memcpy(call + 1, &rel, 4);
+            if (mem::Matches(at, call, sizeof(call)))
+                mem::WriteCall(at, reinterpret_cast<const void*>(&CursorDraw), sizeof(call));
+            else
+                Log("skip: menu cursor draw at %08X is already patched", static_cast<unsigned>(at));
+        }
+    }
+}
+
 void InstallFrontendFixes()
 {
     for (scope::Hook& h : g_loading)
@@ -174,6 +211,7 @@ void InstallFrontendFixes()
     if (!scope::Install(g_drawFrontEnd))
         return;
     scope::Install(g_printMap);
+    InstallCursorFix();
     if (config::wideMap)
         InstallWideMap();
     InstallMenuSettings();
